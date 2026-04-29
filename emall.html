@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eMall 이용 현황 | 동화약품 영업기획팀 | 2026.03</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap');
+:root{
+  --red:#CC0015;  --red-bg:rgba(204,0,21,.08);  --red-bd:rgba(204,0,21,.25);
+  --navy:#162040; --blue:#2A4490;
+  --dark:#111320; --mid:#383A52; --sub:#5A5C75;
+  --bg:#E8EAF3;   --card:#FFFFFF; --bdr:#C8CBE0;
+  --grn:#0A9055;  --amb:#B05400; --pur:#4D35A8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:15px;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--dark);}
+
+/* ── HEADER ── */
+.hd{background:var(--navy);padding:24px 44px;display:flex;align-items:center;justify-content:space-between;}
+.hd-chip{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:3px;margin-bottom:10px;}
+.hd-title{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.5px;}
+.hd-title em{color:#FF8090;font-style:normal;}
+.hd-sub{font-size:13px;color:rgba(255,255,255,.45);margin-top:5px;}
+.hd-r{text-align:right;}
+.hd-mon{font-size:38px;font-weight:900;color:#fff;line-height:1;letter-spacing:-2px;}
+.hd-mon span{font-size:16px;color:rgba(255,255,255,.3);}
+.hd-note{font-size:12px;color:rgba(255,255,255,.3);margin-top:4px;}
+
+/* ── WRAP ── */
+.wrap{padding:24px 44px 52px;}
+
+/* ── SECTION ── */
+.sec{margin-bottom:24px;}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-bar{width:4px;height:20px;background:var(--red);border-radius:3px;flex-shrink:0;}
+.sec-title{font-size:15px;font-weight:800;color:var(--dark);}
+.sec-desc{font-size:13px;color:var(--sub);}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:22px 26px;}
+.ctit{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.csub{font-size:12.5px;color:var(--sub);margin-bottom:16px;}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* ── KPI ── */
+.kpi-row{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:14px;margin-bottom:22px;}
+.kpi{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:18px 22px;position:relative;overflow:hidden;}
+.kpi.red{background:var(--red);border-color:var(--red);}
+.kpi.nv{background:var(--navy);border-color:var(--navy);}
+.kpi-lbl{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.3px;margin-bottom:9px;}
+.kpi.red .kpi-lbl,.kpi.nv .kpi-lbl{color:rgba(255,255,255,.55);}
+.kpi-val{font-size:26px;font-weight:900;color:var(--dark);line-height:1;}
+.kpi-val sub{font-size:13px;font-weight:500;}
+.kpi.red .kpi-val,.kpi.nv .kpi-val{color:#fff;}
+.kpi-sub{font-size:12.5px;color:var(--sub);margin-top:5px;font-weight:600;}
+.kpi.red .kpi-sub,.kpi.nv .kpi-sub{color:rgba(255,255,255,.5);}
+.kpi-bot{position:absolute;bottom:0;left:0;height:3px;background:var(--red);}
+/* 비교형 KPI */
+.kpi-cmp{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:18px 22px;}
+.kpi-cmp-lbl{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.3px;margin-bottom:12px;}
+.kpi-cmp-row{display:flex;align-items:center;}
+.kci{flex:1;}
+.kci+.kci{padding-left:18px;border-left:2px solid var(--bdr);}
+.kci-tag{font-size:11.5px;font-weight:700;color:var(--sub);margin-bottom:5px;}
+.kci-val{font-size:22px;font-weight:900;line-height:1;}
+.kci-sub{font-size:12px;font-weight:600;margin-top:4px;}
+.cmp-bar{margin-top:13px;}
+.bar-track{display:flex;height:8px;border-radius:99px;overflow:hidden;gap:2px;}
+.bar-z1{background:var(--navy);opacity:.55;border-radius:99px 0 0 99px;}
+.bar-z7{background:var(--red);border-radius:0 99px 99px 0;}
+.bar-lbls{display:flex;justify-content:space-between;margin-top:5px;}
+.bar-lbls span{font-size:12px;font-weight:700;}
+
+/* ── TOGGLE ── */
+.tog-row{display:flex;gap:5px;}
+.tog{padding:6px 16px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--bdr);color:var(--sub);background:var(--card);transition:all .12s;}
+.tog.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+/* ── 채널 분류 ── */
+.ch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+.ch-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:20px 22px;text-align:center;}
+.ch-card.hl{border-color:var(--red-bd);background:var(--red-bg);}
+.ch-pct{font-size:32px;font-weight:900;color:var(--dark);line-height:1;margin-bottom:4px;}
+.ch-card.hl .ch-pct{color:var(--red);}
+.ch-nm{font-size:13px;font-weight:700;color:var(--mid);margin-bottom:3px;}
+.ch-cnt{font-size:13px;font-weight:700;color:var(--sub);}
+
+/* ── 병행 거래선 제품 비교 ── */
+.prod-cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.prod-col{}
+.prod-col-hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;margin-bottom:12px;}
+.prod-col-hd.z1{background:rgba(22,32,64,.08);}
+.prod-col-hd.z7{background:var(--red-bg);}
+.prod-ch-badge{padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;}
+.badge-z1{background:rgba(22,32,64,.15);color:var(--navy);}
+.badge-z7{background:var(--red-bd);color:var(--red);}
+.prod-col-title{font-size:13px;font-weight:700;color:var(--dark);}
+.prod-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #ECEEF8;}
+.prod-row:last-child{border-bottom:none;}
+.prod-rank{font-size:12px;font-weight:700;color:var(--sub);width:20px;flex-shrink:0;text-align:center;}
+.prod-nm{font-size:13px;font-weight:600;color:var(--dark);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prod-bar-wrap{width:90px;background:var(--bg);border-radius:99px;height:7px;overflow:hidden;flex-shrink:0;}
+.prod-bar-fill{height:100%;border-radius:99px;}
+.prod-amt{font-size:12px;font-weight:700;color:var(--mid);width:62px;text-align:right;flex-shrink:0;}
+
+/* ── 차이 하이라이트 ── */
+.diff-box{background:#F8F9FF;border:1.5px solid var(--bdr);border-radius:10px;padding:16px 20px;margin-top:16px;}
+.diff-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px;}
+.diff-row{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
+.diff-row:last-child{margin-bottom:0;}
+.diff-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.diff-txt{font-size:13px;color:var(--mid);line-height:1.65;font-weight:500;}
+.diff-txt b{color:var(--dark);font-weight:700;}
+.diff-txt .r{color:var(--red);font-weight:700;}
+.diff-txt .n{color:var(--blue);font-weight:700;}
+
+/* ── 대형약국 기준 ── */
+.crit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;}
+.crit-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:18px 20px;}
+.crit-card.active{border-color:var(--red-bd);border-width:2px;}
+.crit-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.crit-label{font-size:12px;font-weight:700;color:var(--sub);}
+.crit-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;}
+.badge-prop{background:var(--red-bg);color:var(--red);}
+.badge-ref{background:#F0F0F8;color:var(--sub);}
+.crit-num{font-size:28px;font-weight:900;color:var(--dark);line-height:1;margin-bottom:4px;}
+.crit-card.active .crit-num{color:var(--red);}
+.crit-desc{font-size:12.5px;color:var(--sub);font-weight:600;margin-bottom:12px;}
+.crit-detail{font-size:12.5px;color:var(--mid);line-height:1.65;font-weight:500;}
+.crit-detail b{font-weight:700;color:var(--dark);}
+.crit-bar-row{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.crit-bar-wrap{flex:1;background:var(--bg);border-radius:99px;height:7px;overflow:hidden;}
+.crit-bar-fill{height:100%;background:var(--red);border-radius:99px;}
+.crit-bar-pct{font-size:12px;font-weight:700;color:var(--red);width:36px;text-align:right;flex-shrink:0;}
+.discuss-box{background:#FAFAFE;border:1.5px solid var(--bdr);border-radius:10px;padding:16px 20px;}
+.discuss-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px;}
+.discuss-row{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start;}
+.discuss-row:last-child{margin-bottom:0;}
+.discuss-ico{font-size:14px;flex-shrink:0;}
+.discuss-txt{font-size:13px;color:var(--mid);line-height:1.65;font-weight:500;}
+.discuss-txt b{font-weight:700;color:var(--dark);}
+
+/* ── 지역 ── */
+.rb-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #E4E6F2;}
+.rb-row:last-child{border-bottom:none;}
+.rb-lbl{font-size:13px;font-weight:700;color:var(--dark);width:44px;flex-shrink:0;}
+.rb-wrap{flex:1;background:var(--bg);border-radius:99px;height:9px;overflow:hidden;}
+.rb-fill{height:100%;background:var(--red);border-radius:99px;}
+.rb-v1{font-size:13px;font-weight:700;color:var(--dark);width:64px;text-align:right;flex-shrink:0;}
+.rb-v2{font-size:12.5px;color:var(--sub);width:46px;text-align:right;flex-shrink:0;font-weight:600;}
+
+/* ── 테이블 ── */
+.tbl-wrap{border:1.5px solid var(--bdr);border-radius:10px;overflow:hidden;}
+.tbl-scroll{overflow-y:auto;}
+.tbl-scroll::-webkit-scrollbar{width:5px;}
+.tbl-scroll::-webkit-scrollbar-thumb{background:#B8BACE;border-radius:99px;}
+table{width:100%;border-collapse:collapse;}
+thead{position:sticky;top:0;z-index:2;}
+thead th{background:var(--navy);font-size:12.5px;font-weight:700;color:rgba(255,255,255,.75);
+  padding:11px 14px;text-align:left;letter-spacing:.3px;white-space:nowrap;}
+thead th.r{text-align:right;}
+thead th.cur{cursor:pointer;user-select:none;}
+thead th.cur:hover{color:#fff;}
+thead th.srt{color:#fff;}
+thead th .arr{margin-left:3px;opacity:.4;font-size:11px;}
+thead th.srt .arr{opacity:1;color:#FFA0AC;}
+tbody td{padding:9px 14px;font-size:13px;color:var(--dark);border-bottom:1px solid #ECEFF8;font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:#F6F7FF;}
+td.r{text-align:right;}
+td.sub{color:var(--sub);font-size:12.5px;}
+.rnk{display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:5px;font-size:11px;font-weight:700;
+  background:var(--bg);color:var(--sub);}
+.rnk.top{background:var(--red-bg);color:var(--red);}
+
+/* ── 제품 검색 ── */
+.srch-wrap{position:relative;margin-bottom:13px;}
+.srch-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--sub);}
+.srch-inp{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--bdr);border-radius:8px;
+  font-family:inherit;font-size:14px;color:var(--dark);background:var(--card);outline:none;}
+.srch-inp:focus{border-color:var(--red);}
+.srch-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.srch-cnt{font-size:13px;color:var(--sub);font-weight:600;}
+.cat-b{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:700;}
+.cat-OTC{background:rgba(42,68,144,.12);color:var(--blue);}
+.cat-건강기능식품{background:rgba(10,144,85,.12);color:var(--grn);}
+.cat-의약외품{background:rgba(176,84,0,.12);color:var(--amb);}
+.no-res{text-align:center;padding:40px;color:var(--sub);font-size:14px;}
+
+/* ── FOOT ── */
+.foot{margin-top:26px;padding-top:16px;border-top:1.5px solid var(--bdr);
+  display:flex;justify-content:space-between;}
+.foot span{font-size:12.5px;color:var(--sub);font-weight:500;}
+.foot b{color:var(--mid);font-weight:700;}
+canvas{display:block;}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="hd-chip">DONGWHA PHARMACEUTICAL · 영업기획팀</div>
+    <div class="hd-title">eMall <em>이용 현황</em> 분석 대시보드</div>
+    <div class="hd-sub">ZOR7 eMall 주문 데이터 기반 · 채널 비교 / 병행거래선 / 대형약국 기준 / 제품 분석</div>
+  </div>
+  <div class="hd-r">
+    <div style="font-size:11px;color:rgba(255,255,255,.32);letter-spacing:1px;margin-bottom:3px;">데이터 기준</div>
+    <div class="hd-mon">2026<span>.03</span></div>
+    <div class="hd-note">2026.03.01~03.31 · 전체 82,207건</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ① KPI -->
+<div class="kpi-row">
+  <div class="kpi-cmp">
+    <div class="kpi-cmp-lbl">전체 주문 대비 eMall 비중</div>
+    <div class="kpi-cmp-row">
+      <div class="kci">
+        <div class="kci-tag">전체 주문 (ZOR1+ZOR7)</div>
+        <div class="kci-val" style="color:var(--dark)">82,207<span style="font-size:14px;font-weight:600;">건</span></div>
+        <div class="kci-sub" style="color:var(--sub)">매출 142.4억원</div>
+      </div>
+      <div class="kci">
+        <div class="kci-tag" style="color:var(--red)">eMall 주문 (ZOR7)</div>
+        <div class="kci-val" style="color:var(--red)">7,346<span style="font-size:14px;font-weight:600;">건</span></div>
+        <div class="kci-sub" style="color:var(--red)">건수 8.9% · 금액 7.6%</div>
+      </div>
+    </div>
+    <div class="cmp-bar">
+      <div class="bar-track">
+        <div class="bar-z1" style="flex:91.1"></div>
+        <div class="bar-z7" style="flex:8.9"></div>
+      </div>
+      <div class="bar-lbls">
+        <span style="color:var(--navy)">ZOR1 일반주문 91.1%</span>
+        <span style="color:var(--red)">ZOR7 eMall 8.9%</span>
+      </div>
+    </div>
+  </div>
+  <div class="kpi red">
+    <div class="kpi-lbl">eMall 총 매출</div>
+    <div class="kpi-val">10.8<sub>억원</sub></div>
+    <div class="kpi-sub">전체 142.4억 중 7.6%</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">eMall 이용 거래선</div>
+    <div class="kpi-val">2,946<sub>처</sub></div>
+    <div class="kpi-sub">전체 15,825처 중 18.6%</div>
+    <div class="kpi-bot" style="width:18.6%"></div>
+  </div>
+  <div class="kpi nv">
+    <div class="kpi-lbl">취급 제품 수</div>
+    <div class="kpi-val">61<sub>종</sub></div>
+    <div class="kpi-sub">OTC 50 · 건기식 7 · 의약외품 4</div>
+  </div>
+</div>
+
+<!-- ② 일별 트렌드 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-bar"></div>
+    <div class="sec-title">일별 eMall(ZOR7) 주문 추이</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div class="ctit">일별 ZOR7 주문 현황 — 2026년 3월</div>
+        <div class="csub" style="margin:0">주말 구간 음영 표시</div>
+      </div>
+      <div class="tog-row">
+        <div class="tog on" onclick="setMode('cnt',this)">주문 건수</div>
+        <div class="tog" onclick="setMode('amt',this)">매출 금액</div>
+      </div>
+    </div>
+    <canvas id="dailyChart" height="150"></canvas>
+  </div>
+</div>
+
+<!-- ③ 거래선 채널 분류 + 병행거래선 분석 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-bar"></div>
+    <div class="sec-title">거래선 채널 이용 현황 및 병행 거래선 분석</div>
+    <div class="sec-desc">— 선물세트(제품군80)·제약사업부(1900지점) 제외 기준</div>
+  </div>
+
+  <!-- 채널 분류 3개 카드 -->
+  <div class="ch-grid">
+    <div class="ch-card">
+      <div class="ch-pct" style="color:var(--sub)">81.1%</div>
+      <div class="ch-nm">오프라인 전용 (ZOR1)</div>
+      <div class="ch-cnt">12,655개 거래선</div>
+    </div>
+    <div class="ch-card">
+      <div class="ch-pct" style="color:var(--sub)">11.0%</div>
+      <div class="ch-nm">eMall 전용 (ZOR7)</div>
+      <div class="ch-cnt">1,711개 거래선</div>
+    </div>
+    <div class="ch-card hl">
+      <div class="ch-pct">7.9%</div>
+      <div class="ch-nm">병행 이용 (ZOR1+ZOR7)</div>
+      <div class="ch-cnt">1,235개 거래선</div>
+    </div>
+  </div>
+
+  <!-- 병행 거래선 제품 비교 -->
+  <div class="card">
+    <div class="ctit">병행 이용 거래선(1,235개)의 채널별 주문 제품 비교</div>
+    <div class="csub">동일 거래선이 ZOR1로는 어떤 제품을, ZOR7로는 어떤 제품을 주문하는가 · 매출 금액 기준 TOP 15</div>
+
+    <!-- 핵심 수치 -->
+    <div style="display:flex;gap:16px;margin-bottom:18px;">
+      <div style="background:rgba(22,32,64,.06);border-radius:8px;padding:12px 18px;flex:1;">
+        <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:5px;">병행 거래선 ZOR1 주문</div>
+        <div style="font-size:20px;font-weight:900;color:var(--navy)">2,729<span style="font-size:13px;font-weight:500;">건</span></div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--sub);margin-top:3px">금액 62.2억 (병행 내 48.5%)</div>
+      </div>
+      <div style="background:var(--red-bg);border-radius:8px;padding:12px 18px;flex:1;">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:5px;">병행 거래선 ZOR7 주문</div>
+        <div style="font-size:20px;font-weight:900;color:var(--red)">3,590<span style="font-size:13px;font-weight:500;">건</span></div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--red);margin-top:3px">금액 65.9억 (병행 내 <b>51.5%</b>)</div>
+      </div>
+      <div style="background:#F5F5FA;border-radius:8px;padding:12px 18px;flex:1.2;display:flex;align-items:center;">
+        <div style="font-size:13px;color:var(--mid);line-height:1.7;font-weight:500;">eMall을 시작한 거래선은<br>오히려 <b style="color:var(--red)">ZOR7 비중이 더 높음</b>.<br>한번 쓰면 적극 활용하는 패턴.</div>
+      </div>
+    </div>
+
+    <div class="prod-cmp">
+      <div class="prod-col">
+        <div class="prod-col-hd z1">
+          <span class="prod-ch-badge badge-z1">ZOR1 일반주문</span>
+          <span class="prod-col-title">주로 이런 제품을 오프라인으로 주문</span>
+        </div>
+        <div id="z1-list"></div>
+      </div>
+      <div class="prod-col">
+        <div class="prod-col-hd z7">
+          <span class="prod-ch-badge badge-z7">ZOR7 eMall주문</span>
+          <span class="prod-col-title">주로 이런 제품을 eMall로 주문</span>
+        </div>
+        <div id="z7-list"></div>
+      </div>
+    </div>
+
+    <div class="diff-box">
+      <div class="diff-title">📌 채널별 제품 선택 패턴 — 주목할 차이점</div>
+      <div class="diff-row"><div class="diff-dot" style="background:var(--red)"></div>
+        <div class="diff-txt"><b>잇치페이스트 피톤치드·프로폴리스</b>는 ZOR1에만 집중 (ZOR7 0원) — eMall에 해당 SKU가 미등록되어 있거나, <span class="r">MR이 직접 제안·권유해야 팔리는 프리미엄 라인</span>인 것으로 해석.</div>
+      </div>
+      <div class="diff-row"><div class="diff-dot" style="background:var(--red)"></div>
+        <div class="diff-txt"><b>동화알보칠액 5ml</b>는 ZOR1 TOP3이지만 ZOR7에 미등장 — eMall 미취급 또는 자체 발주 어려운 구조.</div>
+      </div>
+      <div class="diff-row"><div class="diff-dot" style="background:var(--blue)"></div>
+        <div class="diff-txt"><b>까스활명수·잇치페이스트 일반형</b>은 양 채널 모두 1·2위 — 대표 품목은 채널 무관하게 꾸준히 발주.</div>
+      </div>
+      <div class="diff-row"><div class="diff-dot" style="background:var(--blue)"></div>
+        <div class="diff-txt"><b>활명수-유액·후시딘겔·아프타치·꼬마활명수</b>는 ZOR7에만 등장 — <span class="n">eMall 전환 후 추가 발굴되는 품목</span>으로 해석 가능.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 지역 + TOP100 -->
+<div class="g2 sec">
+  <div class="card">
+    <div class="ctit">지역별 eMall 이용 현황</div>
+    <div class="csub">시·도 기준 · 매출 금액 순 · 거래선 수 병기</div>
+    <div id="region-list"></div>
+  </div>
+  <div style="background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="padding:18px 22px 12px;">
+      <div class="ctit">eMall 이용 거래선 TOP 100</div>
+      <div class="csub" style="margin:0">매출 금액 기준 · 상위 3위 강조 · 이용일수 = 3월 중 eMall 주문 발생 일수</div>
+    </div>
+    <div class="tbl-scroll" style="max-height:480px;border-top:1.5px solid var(--bdr);">
+      <table>
+        <thead><tr>
+          <th style="padding-left:16px;width:34px;">#</th>
+          <th>약국명</th>
+          <th>지역</th>
+          <th class="r">주문건수</th>
+          <th class="r">품목수</th>
+          <th class="r">이용일수</th>
+          <th class="r">매출(원)</th>
+        </tr></thead>
+        <tbody id="store-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ⑥ 제품 검색 -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-bar"></div>
+    <div class="sec-title">제품별 eMall 판매 현황</div>
+    <div class="sec-desc">— 전 61개 제품 검색 및 정렬 가능</div>
+  </div>
+  <div class="card">
+    <div class="srch-wrap">
+      <span class="srch-ico">🔍</span>
+      <input class="srch-inp" type="text" id="srchIn"
+        placeholder="제품명 또는 자재코드로 검색   예) 까스활명수 · 잇치 · 5003001"
+        oninput="doFilter()">
+    </div>
+    <div class="srch-meta">
+      <div class="srch-cnt" id="srch-cnt">전체 61개 제품</div>
+      <div class="tog-row">
+        <div class="tog on" onclick="setCat('ALL',this)">전체</div>
+        <div class="tog" onclick="setCat('OTC',this)">OTC</div>
+        <div class="tog" onclick="setCat('건강기능식품',this)">건강기능식품</div>
+        <div class="tog" onclick="setCat('의약외품',this)">의약외품</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-scroll" style="max-height:420px;" id="ptbl-wrap">
+        <table>
+          <thead><tr>
+            <th class="cur" onclick="doSort('자재')" id="H자재">자재코드<span class="arr">↕</span></th>
+            <th class="cur" onclick="doSort('내역')" id="H내역">제품명<span class="arr">↕</span></th>
+            <th class="cur" onclick="doSort('제품군명')" id="H제품군명">제품군<span class="arr">↕</span></th>
+            <th class="r cur" onclick="doSort('건수')" id="H건수">주문건수<span class="arr">↕</span></th>
+            <th class="r cur" onclick="doSort('수량')" id="H수량">수량<span class="arr">↕</span></th>
+            <th class="r cur srt" onclick="doSort('금액')" id="H금액">매출(원)<span class="arr" style="opacity:1;color:#FFA0AC;">↓</span></th>
+            <th class="r cur" onclick="doSort('거래선수')" id="H거래선수">이용거래선<span class="arr">↕</span></th>
+          </tr></thead>
+          <tbody id="ptbl-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="no-res" class="no-res" style="display:none;">검색 결과가 없습니다.</div>
+  </div>
+</div>
+
+<div class="foot">
+  <span><b>동화약품 고객감동본부 영업기획팀</b> · ZOR7 eMall 주문 데이터 기반 · 내부 배포용</span>
+  <span>데이터 기준: 2026.03.01 ~ 03.31</span>
+</div>
+</div>
+
+<script>
+/* ════ DATA ════ */
+const DAILY=[{날짜:"03-03",건수:738,금액:126130624},{날짜:"03-04",건수:270,금액:34298024},{날짜:"03-05",건수:285,금액:38043324},{날짜:"03-06",건수:219,금액:32120174},{날짜:"03-07",건수:149,금액:16866623},{날짜:"03-08",건수:42,금액:5814370},{날짜:"03-09",건수:268,금액:35755178},{날짜:"03-10",건수:334,금액:51771580},{날짜:"03-11",건수:256,금액:51198470},{날짜:"03-12",건수:336,금액:48523868},{날짜:"03-13",건수:291,금액:41629494},{날짜:"03-14",건수:143,금액:17698064},{날짜:"03-15",건수:49,금액:10235430},{날짜:"03-16",건수:321,금액:55174888},{날짜:"03-17",건수:321,금액:37049432},{날짜:"03-18",건수:241,금액:34996654},{날짜:"03-19",건수:286,금액:35262590},{날짜:"03-20",건수:312,금액:46894360},{날짜:"03-21",건수:188,금액:23117440},{날짜:"03-22",건수:77,금액:14647740},{날짜:"03-23",건수:373,금액:50748543},{날짜:"03-24",건수:307,금액:42690538},{날짜:"03-25",건수:293,금액:38554753},{날짜:"03-26",건수:315,금액:48281210},{날짜:"03-27",건수:256,금액:39799874},{날짜:"03-28",건수:165,금액:20266224},{날짜:"03-29",건수:66,금액:12892360},{날짜:"03-30",건수:282,금액:52654924},{날짜:"03-31",건수:163,금액:18706754}];
+const DOW=[1,2,3,4,5,6,0,1,2,3,4,5,6,0,1,2,3,4,5,6,0,1,2,3,4,5,6,0,1];
+const DOW_KO=['월','화','수','목','금','토','일'];
+const REGION=[{시도:"경기",금액:254363155,거래선수:843},{시도:"서울",금액:243992848,거래선수:724},{시도:"대구",금액:80165170,거래선수:95},{시도:"인천",금액:63448000,거래선수:198},{시도:"충남",금액:61951360,거래선수:136},{시도:"울산",금액:57942040,거래선수:32},{시도:"부산",금액:46170994,거래선수:147},{시도:"경남",금액:40908260,거래선수:117},{시도:"광주",금액:38889608,거래선수:93},{시도:"경북",금액:36281494,거래선수:96},{시도:"대전",금액:32004660,거래선수:119},{시도:"충북",금액:29355320,거래선수:81},{시도:"전남",금액:16940270,거래선수:65}];
+const BZ1=[{내역:"까스활명수큐액 75ML(60)",건수:209,금액:95839440},{내역:"잇치페이스트 피톤치드 150g",건수:254,금액:94516000},{내역:"잇치페이스트120g (자사)",건수:204,금액:86032760},{내역:"큐립연고 8g",건수:244,금액:58227200},{내역:"잇치페이스트 프로폴리스 140g",건수:163,금액:55412000},{내역:"동화알보칠액 5ml",건수:393,금액:47699900},{내역:"큐립연고 8g 마일드허브향",건수:171,금액:40368000},{내역:"화이투벤큐플러스연질캡슐 10C",건수:116,금액:17490000},{내역:"바르지오 네일라카 5.0ml x 2",건수:27,금액:9185600},{내역:"바르지오 모두크림 30g",건수:52,금액:8464752},{내역:"세비타비겔 18g",건수:39,금액:7513600},{내역:"화이투벤키즈펜시럽 (10ml/10포)",건수:106,금액:6824400},{내역:"파워콜에스연질캡슐 10C",건수:45,금액:5693040},{내역:"잇백시린이듀얼케어치약 120g",건수:35,금액:4649400},{내역:"미보(MEBO)연고 10G",건수:20,금액:4320000}];
+const BZ7=[{내역:"까스활명수큐액 75ML(60)",건수:840,금액:209055720},{내역:"잇치페이스트120g (자사)",건수:345,금액:137681280},{내역:"큐립연고 8g",건수:147,금액:47232000},{내역:"세비타비겔 18g",건수:160,금액:27160000},{내역:"바르지오 네일라카 5.0ml x 2",건수:40,금액:16390000},{내역:"활명수-유액 10ML x 5입",건수:102,금액:15843600},{내역:"미보(MEBO)연고 10G",건수:127,금액:14688000},{내역:"후시딘겔 15g",건수:65,금액:13363200},{내역:"부채표쌍화천 100ML(자사)",건수:229,금액:12486200},{내역:"바르지오 모두크림 30g",건수:79,금액:12230160},{내역:"아프타치정 10T(제품)",건수:94,금액:10508300},{내역:"꼬마활명수 액 10ML x 5입",건수:74,금액:9254400},{내역:"비타천플러스100ML(자사)",건수:93,금액:7204000},{내역:"미니온플라스타 96P(대용량)",건수:25,금액:7069590},{내역:"부채표쌍화탕 100ML",건수:78,금액:6784800}];
+const STORES=[{이름:"메디킹덤약국",주소:"서울 용산구",건수:68,품목수:31,일수:11,금액:41370648},{이름:"메가타운약국",주소:"대구 서구",건수:42,품목수:23,일수:7,금액:28884810},{이름:"울산제일큰약국",주소:"울산 북구",건수:16,품목수:10,일수:10,금액:26770240},{이름:"메가플러스약국",주소:"울산 북구",건수:12,품목수:10,일수:6,금액:16955770},{이름:"메가팜스365약국",주소:"대구 북구",건수:24,품목수:17,일수:12,금액:15583990},{이름:"메가스토어약국",주소:"광주 광산구",건수:23,품목수:19,일수:9,금액:14131264},{이름:"메가타운약국",주소:"대구 수성구",건수:22,품목수:16,일수:9,금액:13166500},{이름:"메가센트럴약국",주소:"충남 천안시",건수:28,품목수:23,일수:4,금액:11408050},{이름:"메가타운약국",주소:"경기 평택시",건수:9,품목수:7,일수:3,금액:9622190},{이름:"메가자이언트약국",주소:"부산 사상구",건수:22,품목수:17,일수:10,금액:9522270},{이름:"메디플러스약국",주소:"전북 전주시",건수:15,품목수:12,일수:10,금액:7636750},{이름:"메가온누리약국",주소:"경기 화성시",건수:17,품목수:15,일수:10,금액:7635644},{이름:"제주소랑약국",주소:"제주 제주시",건수:39,품목수:38,일수:2,금액:7203564},{이름:"명동뷰티랩약국",주소:"서울 중구",건수:11,품목수:7,일수:4,금액:7017000},{이름:"브라이튼약국",주소:"서울 중구",건수:6,품목수:5,일수:4,금액:5314160},{이름:"테라메디약국",주소:"전북 전주시",건수:14,품목수:13,일수:10,금액:4237500},{이름:"경주백화점대형약국",주소:"경북 경주시",건수:8,품목수:4,일수:4,금액:3680260},{이름:"하나약국(서산)",주소:"충남 서산시",건수:15,품목수:5,일수:13,금액:3659200},{이름:"명동친한약국",주소:"서울 중구",건수:3,품목수:2,일수:3,금액:3417600},{이름:"명동중앙로퓨어약국",주소:"서울 중구",건수:4,품목수:2,일수:4,금액:3313200},{이름:"성수레디영약국",주소:"서울 성동구",건수:11,품목수:10,일수:10,금액:3103810},{이름:"제주메가약국",주소:"제주 제주시",건수:9,품목수:8,일수:2,금액:3061320},{이름:"대학약국",주소:"울산 동구",건수:2,품목수:2,일수:1,금액:3034320},{이름:"365플러스약국",주소:"경남 양산시",건수:24,품목수:21,일수:6,금액:3027370},{이름:"바다약국",주소:"인천 부평구",건수:4,품목수:3,일수:4,금액:2979100},{이름:"화정마트약국",주소:"경기 고양시",건수:5,품목수:3,일수:4,금액:2932500},{이름:"명동타운레디영약국",주소:"서울 중구",건수:4,품목수:3,일수:4,금액:2850360},{이름:"건강약국",주소:"대전 대덕구",건수:1,품목수:1,일수:1,금액:2562000},{이름:"에이트명동1번가약국",주소:"서울 중구",건수:4,품목수:4,일수:4,금액:2400000},{이름:"봄봄약국",주소:"울산 중구",건수:1,품목수:1,일수:1,금액:2361600},{이름:"안양 팜올데이약국",주소:"경기 안양시",건수:11,품목수:11,일수:9,금액:2310635},{이름:"마산육일약국",주소:"경남 창원시",건수:7,품목수:7,일수:6,금액:2219960},{이름:"명동더서울약국",주소:"서울 중구",건수:5,품목수:5,일수:4,금액:2211400},{이름:"명동뷰티유약국",주소:"서울 중구",건수:3,품목수:1,일수:3,금액:2150400},{이름:"영스약국",주소:"서울 중구",건수:10,품목수:9,일수:2,금액:2088000},{이름:"팜스퀘어약국",주소:"경기 안양시",건수:10,품목수:10,일수:3,금액:2079490},{이름:"우정약국",주소:"서울 종로구",건수:7,품목수:4,일수:6,금액:2022764},{이름:"스마트약국",주소:"서울 중구",건수:4,품목수:3,일수:2,금액:1949200},{이름:"화산약국",주소:"경북 청도군",건수:8,품목수:7,일수:6,금액:1928090},{이름:"수원마트약국",주소:"경기 수원시",건수:10,품목수:7,일수:6,금액:1874640},{이름:"오프약국",주소:"서울 마포구",건수:7,품목수:5,일수:3,금액:1865600},{이름:"라멜렉스약국",주소:"서울 중구",건수:1,품목수:1,일수:1,금액:1843200},{이름:"만촌대형약국",주소:"대구 수성구",건수:11,품목수:11,일수:2,금액:1826670},{이름:"조치원햇살약국",주소:"세종시",건수:4,품목수:4,일수:2,금액:1784760},{이름:"안양온약국",주소:"경기 안양시",건수:11,품목수:11,일수:7,금액:1772340},{이름:"온누리선우약국",주소:"경기 광명시",건수:9,품목수:8,일수:6,금액:1719870},{이름:"하나둘약국",주소:"충남 아산시",건수:10,품목수:10,일수:8,금액:1693800},{이름:"명동백화점약국",주소:"서울 중구",건수:5,품목수:5,일수:1,금액:1676400},{이름:"디에스알약국",주소:"경기 화성시",건수:6,품목수:6,일수:4,금액:1639660},{이름:"옵티마웰니스뮤지엄이태원약국",주소:"서울 용산구",건수:12,품목수:11,일수:3,금액:1610724},{이름:"365미장약국",주소:"전북 군산시",건수:6,품목수:4,일수:6,금액:1592300},{이름:"나주온누리약국",주소:"전남 나주시",건수:2,품목수:1,일수:2,금액:1574400},{이름:"삼정약국",주소:"인천 남구",건수:6,품목수:5,일수:6,금액:1563320},{이름:"명동레디영약국",주소:"서울 중구",건수:7,품목수:5,일수:5,금액:1554000},{이름:"스마일약국",주소:"부산 부산진구",건수:12,품목수:11,일수:6,금액:1534270},{이름:"행복나무약국",주소:"서울 강동구",건수:5,품목수:4,일수:4,금액:1522700},{이름:"남양주메가몰약국",주소:"경기 남양주시",건수:7,품목수:4,일수:5,금액:1509740},{이름:"사랑인약국",주소:"경기 고양시",건수:1,품목수:1,일수:1,금액:1495680},{이름:"분당그린약국",주소:"경기 성남시",건수:10,품목수:10,일수:7,금액:1483160},{이름:"서신큰약국",주소:"전북 전주시",건수:5,품목수:3,일수:3,금액:1441080},{이름:"휴베이스동아약국",주소:"서울 관악구",건수:7,품목수:7,일수:3,금액:1421800},{이름:"이수마트약국",주소:"서울 동작구",건수:12,품목수:11,일수:7,금액:1406940},{이름:"광명일번약국",주소:"경기 광명시",건수:20,품목수:20,일수:1,금액:1397794},{이름:"중앙프라자약국",주소:"경남 합천군",건수:6,품목수:3,일수:5,금액:1387200},{이름:"충무로에이트약국",주소:"서울 중구",건수:4,품목수:4,일수:3,금액:1348740},{이름:"우주약국",주소:"광주 동구",건수:14,품목수:14,일수:2,금액:1345540},{이름:"구름약국",주소:"경기 김포시",건수:8,품목수:3,일수:7,금액:1341690},{이름:"경서메디칼약국",주소:"인천 서구",건수:3,품목수:3,일수:3,금액:1335720},{이름:"메디칼하늘약국",주소:"서울 강남구",건수:18,품목수:18,일수:1,금액:1296870},{이름:"메디팜명문약국",주소:"전남 목포시",건수:3,품목수:3,일수:1,금액:1281900},{이름:"이수약국",주소:"충북 충주시",건수:10,품목수:6,일수:5,금액:1272870},{이름:"농민약국",주소:"전북 정읍시",건수:5,품목수:4,일수:5,금액:1250400},{이름:"해나온최약국",주소:"강원 정선군",건수:11,품목수:3,일수:8,금액:1239040},{이름:"엠메디칼약국",주소:"경기 의정부시",건수:6,품목수:6,일수:4,금액:1237480},{이름:"창동종로약국",주소:"서울 도봉구",건수:7,품목수:6,일수:6,금액:1203200},{이름:"서면열린약국",주소:"부산 부산진구",건수:14,품목수:12,일수:9,금액:1194600},{이름:"가을사과약국",주소:"충북 충주시",건수:10,품목수:9,일수:2,금액:1186250},{이름:"코스트팜약국",주소:"경기 용인시",건수:1,품목수:1,일수:1,금액:1180800},{이름:"검단센트럴약국",주소:"인천 서구",건수:5,품목수:4,일수:3,금액:1168560},{이름:"보건약국",주소:"강원 강릉시",건수:6,품목수:5,일수:4,금액:1155300},{이름:"메가플러스약국",주소:"광주 광산구",건수:3,품목수:3,일수:3,금액:1144000},{이름:"대학로대학약국",주소:"서울 종로구",건수:5,품목수:5,일수:5,금액:1120700},{이름:"두리약국",주소:"인천 서구",건수:6,품목수:6,일수:4,금액:1116840},{이름:"전남약국",주소:"전남 화순군",건수:5,품목수:5,일수:2,금액:1114760},{이름:"구갈온누리약국",주소:"경기 용인시",건수:3,품목수:3,일수:3,금액:1105100},{이름:"허브약국",주소:"세종시",건수:6,품목수:6,일수:3,금액:1104670},{이름:"건강나누리약국",주소:"인천 미추홀구",건수:3,품목수:3,일수:1,금액:1104300},{이름:"바른약국",주소:"인천 서구",건수:2,품목수:2,일수:1,금액:1101480},{이름:"건강당약국",주소:"경기 동두천시",건수:6,품목수:5,일수:6,금액:1091124},{이름:"태평양약국(신탄진)",주소:"대전 대덕구",건수:10,품목수:6,일수:8,금액:1081300},{이름:"계수약국",주소:"대전 중구",건수:5,품목수:4,일수:3,금액:1080510},{이름:"삼성약국",주소:"경북 포항시",건수:8,품목수:8,일수:2,금액:1079334},{이름:"마도수정약국",주소:"경기 화성시",건수:5,품목수:4,일수:3,금액:1070260},{이름:"뉴스케치약국",주소:"서울 중구",건수:2,품목수:2,일수:2,금액:1057950},{이름:"당근약국",주소:"경기 화성시",건수:8,품목수:5,일수:6,금액:1049240},{이름:"보보약국",주소:"광주 북구",건수:3,품목수:3,일수:1,금액:1048400},{이름:"한티365약국",주소:"서울 강남구",건수:6,품목수:3,일수:5,금액:1044480},{이름:"남양주백화점대형약국",주소:"경기 남양주시",건수:7,품목수:6,일수:4,금액:1033800},{이름:"남양하나약국",주소:"경기 화성시",건수:5,품목수:4,일수:4,금액:1030700},{이름:"병점365약국",주소:"경기 화성시",건수:8,품목수:7,일수:3,금액:1029804}];
+const ALL_PRODS=[{자재:5000004,내역:"까스활명수큐액 75ML(60)",제품군명:"OTC",건수:1900,수량:408420,금액:354829260,거래선수:1534},{자재:5003001,내역:"잇치페이스트120g (자사)",제품군명:"OTC",건수:830,수량:30650,금액:241276800,거래선수:758},{자재:5003379,내역:"큐립연고 8g",제품군명:"OTC",건수:400,수량:18720,금액:71884800,거래선수:382},{자재:5003052,내역:"세비타비겔 18g",제품군명:"OTC",건수:315,수량:9210,금액:39696600,거래선수:298},{자재:5001599,내역:"미보(MEBO)연고 10G",제품군명:"OTC",건수:260,수량:5800,금액:27840000,거래선수:255},{자재:5003007,내역:"부채표쌍화천 100ML(자사)",제품군명:"건강기능식품",건수:468,수량:85200,금액:25389600,거래선수:297},{자재:5003030,내역:"바르지오 네일라카 5.0ml x 2",제품군명:"OTC",건수:79,수량:2400,금액:23884000,거래선수:78},{자재:5003489,내역:"바르지오 모두크림 30g",제품군명:"OTC",건수:175,수량:7068,금액:22577220,거래선수:175},{자재:5002879,내역:"활명수-유액 10ML x 5입",제품군명:"OTC",건수:163,수량:7920,금액:21027600,거래선수:153},{자재:5003056,내역:"후시딘겔 15g",제품군명:"OTC",건수:118,수량:3400,금액:19584000,거래선수:113},{자재:5000713,내역:"아프타치정 10T(제품)",제품군명:"OTC",건수:201,수량:3780,금액:17808000,거래선수:194},{자재:5003006,내역:"비타천플러스100ML(자사)",제품군명:"건강기능식품",건수:227,수량:49350,금액:15966250,거래선수:198},{자재:5002892,내역:"꼬마활명수 액 10ML x 5입",제품군명:"OTC",건수:133,수량:5340,금액:14305200,거래선수:129},{자재:5000012,내역:"부채표쌍화탕 100ML",제품군명:"OTC",건수:160,수량:33050,금액:12378700,거래선수:147},{자재:5002340,내역:"미니온플라스타 96P(대용량)",제품군명:"OTC",건수:44,수량:2040,금액:11586210,거래선수:43},{자재:5002596,내역:"모가프텐트로키 12T",제품군명:"OTC",건수:149,수량:4410,금액:9774000,거래선수:146},{자재:5002557,내역:"플로리진연질캡슐(세티리진염산염) 10C",제품군명:"OTC",건수:120,수량:12460,금액:9009920,거래선수:113},{자재:5002182,내역:"플로라딘연질캡슐 10C",제품군명:"OTC",건수:159,수량:11050,금액:8499600,거래선수:153},{자재:5001387,내역:"미니온플라스타 60P",제품군명:"OTC",건수:46,수량:1500,금액:6774060,거래선수:46},{자재:5003569,내역:"판콜에이치건조시럽13.2g x 6",제품군명:"OTC",건수:57,수량:1712,금액:6712000,거래선수:56},{자재:5001262,내역:"파워콜에스연질캡슐 10C",제품군명:"OTC",건수:124,수량:9250,금액:6578960,거래선수:119},{자재:5003497,내역:"화이투벤큐플러스코프연질캡슐 10C",제품군명:"OTC",건수:55,수량:6060,금액:6352000,거래선수:52},{자재:5002129,내역:"부채표 한방파프 플러스 카타플라스마 6P",제품군명:"OTC",건수:18,수량:4600,금액:6184200,거래선수:16},{자재:5003498,내역:"화이투벤큐플러스노즈연질캡슐 10C",제품군명:"OTC",건수:57,수량:5700,금액:6058000,거래선수:54},{자재:5002823,내역:"코마키텐 나잘스프레이 20ML",제품군명:"OTC",건수:39,수량:1550,금액:6055650,거래선수:39},{자재:5000201,내역:"후시딘겔 10G",제품군명:"OTC",건수:27,수량:1140,금액:6019200,거래선수:26},{자재:5002890,내역:"헬민리버스액 100ML",제품군명:"OTC",건수:52,수량:4700,금액:5883000,거래선수:51},{자재:5003470,내역:"화이투벤멘톨나잘스프레이 0.1% 10mL",제품군명:"OTC",건수:28,수량:980,금액:5156000,거래선수:28},{자재:5003488,내역:"화이투벤나잘스프레이 0.05% 10mL",제품군명:"OTC",건수:35,수량:850,금액:4649000,거래선수:35},{자재:5003469,내역:"화이투벤나잘스프레이 0.1% 10mL",제품군명:"OTC",건수:23,수량:860,금액:4530000,거래선수:23},{자재:5000396,내역:"샤이닝정 10T",제품군명:"OTC",건수:51,수량:2590,금액:3922800,거래선수:50},{자재:5001381,내역:"알프스디-2000액(의약외품) 100ML",제품군명:"의약외품",건수:56,수량:12800,금액:3776000,거래선수:39},{자재:5002977,내역:"소가프텐정 10T",제품군명:"OTC",건수:54,수량:2740,금액:3728820,거래선수:54},{자재:5003309,내역:"드라이언액 30ml",제품군명:"OTC",건수:42,수량:810,금액:3563000,거래선수:39},{자재:5003534,내역:"잇백 세이클린 프레쉬 60T",제품군명:"의약외품",건수:32,수량:640,금액:3366400,거래선수:32},{자재:5003472,내역:"부채표 배도라지쌍화120ml",제품군명:"건강기능식품",건수:52,수량:6850,금액:2743200,거래선수:51},{자재:5003269,내역:"활짝정 120포(240T)",제품군명:"OTC",건수:39,수량:90,금액:2712000,거래선수:38},{자재:5003633,내역:"부채표 대추생강쌍화120ml",제품군명:"건강기능식품",건수:40,수량:5850,금액:2493000,거래선수:39},{자재:5002173,내역:"황제골드 100ML",제품군명:"건강기능식품",건수:17,수량:3200,금액:2472000,거래선수:17},{자재:5003413,내역:"화이투벤 콜드시럽 20ml x 5",제품군명:"OTC",건수:50,수량:1400,금액:2442000,거래선수:49},{자재:5001380,내역:"트리스펜연질캡슐 10C",제품군명:"OTC",건수:31,수량:3220,금액:2372140,거래선수:31},{자재:5002341,내역:"미니온플라스타 35P(혼합형)",제품군명:"OTC",건수:12,수량:480,금액:2072640,거래선수:12},{자재:5003417,내역:"화이투벤 노즈시럽 20ml x 5",제품군명:"OTC",건수:49,수량:1180,금액:2072000,거래선수:47},{자재:5003383,내역:"후디케어 습윤밴드 스팟",제품군명:"의약외품",건수:11,수량:700,금액:2038000,거래선수:10},{자재:5000500,내역:"포스테리산좌제 10S",제품군명:"OTC",건수:29,수량:330,금액:1995510,거래선수:28},{자재:5003145,내역:"부채표 십신탕액 100ML",제품군명:"OTC",건수:21,수량:2250,금액:1960000,거래선수:19},{자재:5003415,내역:"화이투벤 코프시럽 20ml x 5",제품군명:"OTC",건수:53,수량:1090,금액:1910000,거래선수:53},{자재:5000195,내역:"후시딘히드로크림 10G",제품군명:"OTC",건수:20,수량:540,금액:1814400,거래선수:18},{자재:5003515,내역:"파워콜노즈큐연질캡슐 10C",제품군명:"OTC",건수:37,수량:2540,금액:1791560,거래선수:36},{자재:5001368,내역:"활명수 75ML",제품군명:"OTC",건수:18,수량:2200,금액:1750800,거래선수:17},{자재:5003467,내역:"코마키텐큐나잘스프레이 20ml",제품군명:"OTC",건수:9,수량:420,금액:1598280,거래선수:9},{자재:5003268,내역:"활짝정 6포(12T)",제품군명:"OTC",건수:16,수량:920,금액:1522400,거래선수:16},{자재:5000499,내역:"포스테리산연고 25G",제품군명:"OTC",건수:28,수량:336,금액:1386672,거래선수:27},{자재:5003140,내역:"파워콜캡슐 10C",제품군명:"OTC",건수:29,수량:2680,금액:1346520,거래선수:29},{자재:5003632,내역:"명방 우황청심원액(엘-무스콘) 50mL",제품군명:"OTC",건수:4,수량:300,금액:1334000,거래선수:4},{자재:5002632,내역:"잇백 이너프레쉬 24C",제품군명:"건강기능식품",건수:16,수량:460,금액:1104000,거래선수:15},{자재:5003381,내역:"후디케어 습윤밴드 대형",제품군명:"의약외품",건수:10,수량:360,금액:1102400,거래선수:10},{자재:5002574,내역:"파워콜 코프 연질캡슐 10C",제품군명:"OTC",건수:34,수량:2060,금액:1049560,거래선수:32},{자재:5003579,내역:"잇백 덴탈프로 120T",제품군명:"건강기능식품",건수:9,수량:40,금액:960000,거래선수:8},{자재:5002582,내역:"판콜아이 콜드시럽 12mL X 8P",제품군명:"OTC",건수:14,수량:375,금액:789575,거래선수:14},{자재:5003631,내역:"명방 우황청심원 현탁액 50mL",제품군명:"OTC",건수:1,수량:50,금액:364000,거래선수:1}];
+
+/* ════ DAILY ════ */
+let chartMode='cnt';
+function setMode(m,el){chartMode=m;el.closest('.tog-row').querySelectorAll('.tog').forEach(b=>b.classList.remove('on'));el.classList.add('on');drawDaily();}
+function niceMax(v){const m=Math.pow(10,Math.floor(Math.log10(v)));for(const s of[1,1.5,2,2.5,3,4,5,6,8,10])if(s*m>=v*1.05)return s*m;return 10*m;}
+function drawDaily(){
+  const cv=document.getElementById('dailyChart'),dpr=window.devicePixelRatio||1;
+  const W=cv.parentElement.clientWidth-52,H=150;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  const vals=DAILY.map(d=>chartMode==='cnt'?d.건수:d.금액);
+  const maxV=niceMax(Math.max(...vals));
+  const P={T:14,R:14,B:42,L:chartMode==='cnt'?52:82};
+  const cw=W-P.L-P.R,ch=H-P.T-P.B,n=vals.length,sw=cw/n,bw=sw*0.54;
+  const xc=i=>P.L+(i+0.5)*sw, yv=v=>P.T+ch*(1-v/maxV);
+  DOW.forEach((d,i)=>{if(d===5||d===6){ctx.fillStyle='rgba(204,0,21,.06)';ctx.fillRect(P.L+i*sw,P.T,sw,ch);}});
+  for(let s=1;s<=4;s++){
+    const y=P.T+ch*(1-s/4);
+    ctx.strokeStyle='#D8DAE8';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(P.L,y);ctx.lineTo(W-P.R,y);ctx.stroke();ctx.setLineDash([]);
+    const v=maxV*s/4;
+    const lbl=chartMode==='cnt'?(v>=1000?(v/1000).toFixed(0)+'k':v):(v>=100000000?(v/100000000).toFixed(1)+'억':(v/10000).toFixed(0)+'만');
+    ctx.fillStyle='#50526A';ctx.font='600 12px Noto Sans KR';ctx.textAlign='right';ctx.fillText(lbl,P.L-7,y+4);
+  }
+  vals.forEach((v,i)=>{
+    const x=xc(i)-bw/2,y=yv(v),h=P.T+ch-y;if(h<=0)return;
+    const isW=DOW[i]===5||DOW[i]===6;
+    ctx.fillStyle=isW?'rgba(204,0,21,.32)':'#CC0015';
+    const r=Math.min(3,h/2,bw/2);
+    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+bw-r,y);ctx.arcTo(x+bw,y,x+bw,y+r,r);ctx.lineTo(x+bw,y+h);ctx.lineTo(x,y+h);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();ctx.fill();
+  });
+  ctx.textAlign='center';
+  DAILY.forEach((d,i)=>{
+    const dow=DOW[i],isW=dow===5||dow===6;
+    if(!isW&&i!==0&&i%5!==0&&i!==n-1)return;
+    const xp=xc(i);
+    ctx.fillStyle=isW?'#CC0015':'#50526A';ctx.font=`${isW?'700':'600'} 12px Noto Sans KR`;
+    ctx.fillText(d.날짜.slice(3)+'일',xp,P.T+ch+16);
+    ctx.font=`${isW?'700':'500'} 11px Noto Sans KR`;ctx.fillStyle=isW?'rgba(204,0,21,.65)':'#9092AC';
+    ctx.fillText('('+DOW_KO[dow]+')',xp,P.T+ch+30);
+  });
+  ctx.save();ctx.translate(14,P.T+ch/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#9092AC';ctx.font='500 11px Noto Sans KR';ctx.fillText(chartMode==='cnt'?'주문 건수':'매출 금액',0,0);ctx.restore();
+}
+
+/* ════ 제품 비교 리스트 ════ */
+function renderProdCmp(){
+  const maxZ1=BZ1[0].금액, maxZ7=BZ7[0].금액;
+  const z1el=document.getElementById('z1-list'), z7el=document.getElementById('z7-list');
+  BZ1.forEach((p,i)=>{
+    const w=(p.금액/maxZ1*100).toFixed(1);
+    const amt=(p.금액/1000000).toFixed(1)+'M';
+    z1el.innerHTML+=`<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-nm" title="${p.내역}">${p.내역}</div><div class="prod-bar-wrap"><div class="prod-bar-fill" style="width:${w}%;background:var(--navy);opacity:.7;"></div></div><div class="prod-amt">${amt}</div></div>`;
+  });
+  BZ7.forEach((p,i)=>{
+    const w=(p.금액/maxZ7*100).toFixed(1);
+    const amt=(p.금액/1000000).toFixed(1)+'M';
+    z7el.innerHTML+=`<div class="prod-row"><div class="prod-rank">${i+1}</div><div class="prod-nm" title="${p.내역}">${p.내역}</div><div class="prod-bar-wrap"><div class="prod-bar-fill" style="width:${w}%;background:var(--red);"></div></div><div class="prod-amt">${amt}</div></div>`;
+  });
+}
+
+/* ════ REGION ════ */
+function renderRegion(){
+  const el=document.getElementById('region-list'),mx=REGION[0].금액;
+  REGION.forEach(r=>{
+    const p=(r.금액/mx*100).toFixed(1),a=(r.금액/100000000).toFixed(2)+'억';
+    el.innerHTML+=`<div class="rb-row"><div class="rb-lbl">${r.시도}</div><div class="rb-wrap"><div class="rb-fill" style="width:${p}%"></div></div><div class="rb-v1">${a}</div><div class="rb-v2">${r.거래선수}처</div></div>`;
+  });
+}
+
+/* ════ TOP100 ════ */
+function renderStores(){
+  const tb=document.getElementById('store-tbody');
+  STORES.forEach((s,i)=>{
+    const top=i<3;
+    tb.innerHTML+=`<tr><td style="padding-left:16px;"><span class="rnk ${top?'top':''}">${i+1}</span></td><td style="font-weight:700;">${s.이름}</td><td class="sub">${s.주소}</td><td class="r">${s.건수}</td><td class="r">${s.품목수}</td><td class="r">${s.일수}일</td><td class="r" style="font-weight:700;">${s.금액.toLocaleString()}</td></tr>`;
+  });
+}
+
+/* ════ 제품 테이블 ════ */
+let filtered=[...ALL_PRODS],sortKey='금액',asc=false,cat='ALL';
+function doFilter(){
+  const q=document.getElementById('srchIn').value.trim().toLowerCase();
+  filtered=ALL_PRODS.filter(p=>(cat==='ALL'||p.제품군명===cat)&&(!q||p.내역.toLowerCase().includes(q)||String(p.자재).includes(q)));
+  renderProds();
+}
+function setCat(c,el){cat=c;el.closest('.tog-row').querySelectorAll('.tog').forEach(b=>b.classList.remove('on'));el.classList.add('on');doFilter();}
+function doSort(k){
+  if(sortKey===k){asc=!asc;}else{sortKey=k;asc=k==='내역'||k==='제품군명';}
+  document.querySelectorAll('thead th[id^="H"]').forEach(th=>{th.classList.remove('srt');const a=th.querySelector('.arr');if(a){a.textContent='↕';a.style.opacity='.4';a.style.color='inherit';}});
+  const hEl=document.getElementById('H'+k);
+  if(hEl){hEl.classList.add('srt');const a=hEl.querySelector('.arr');if(a){a.textContent=asc?'↑':'↓';a.style.opacity='1';a.style.color='#FFA0AC';}}
+  renderProds();
+}
+function renderProds(){
+  const sorted=[...filtered].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey];return typeof av==='string'?(asc?av.localeCompare(bv,'ko'):bv.localeCompare(av,'ko')):(asc?av-bv:bv-av);});
+  document.getElementById('srch-cnt').textContent=filtered.length===ALL_PRODS.length?`전체 ${ALL_PRODS.length}개 제품`:`${filtered.length}개 검색됨 (전체 ${ALL_PRODS.length}개 중)`;
+  const tb=document.getElementById('ptbl-body'),nr=document.getElementById('no-res'),pw=document.getElementById('ptbl-wrap');
+  tb.innerHTML='';
+  if(!sorted.length){nr.style.display='block';pw.style.display='none';return;}
+  nr.style.display='none';pw.style.display='block';
+  sorted.forEach(p=>{tb.innerHTML+=`<tr><td class="sub">${p.자재}</td><td style="font-weight:700;max-width:240px;overflow:hidden;text-overflow:ellipsis;" title="${p.내역}">${p.내역}</td><td><span class="cat-b cat-${p.제품군명}">${p.제품군명}</span></td><td class="r">${p.건수.toLocaleString()}</td><td class="r">${p.수량.toLocaleString()}</td><td class="r" style="font-weight:700;">${p.금액.toLocaleString()}</td><td class="r">${p.거래선수.toLocaleString()}</td></tr>`;});
+}
+
+window.addEventListener('load',()=>{drawDaily();renderProdCmp();renderRegion();renderStores();renderProds();});
+window.addEventListener('resize',()=>{drawDaily();});
+</script>
+</body>
+</html>
