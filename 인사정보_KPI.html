@@ -288,6 +288,32 @@ table.t tr.detail-row.open{display:table-row}
 .kpi-formula .f-item.red{background:rgba(200,64,64,.2);border-color:#E88080;color:#FFB3B3}
 .kpi-formula .f-item.blue{background:rgba(74,135,184,.2);border-color:#6BAED6;color:#B3D4EA}
 .kpi-formula .op{color:#94A3B8;font-size:14px;font-weight:700}
+
+/* ── ETC KPI 비활성화 버튼 스타일 ── */
+.nb-etc-off {
+  opacity:.45; cursor:not-allowed; position:relative;
+  background:#f8f8f8 !important; color:#94A3B8 !important;
+  border-color:#e2e8f0 !important;
+}
+.nb-etc-off::after {
+  content:''; display:inline-block;
+  width:7px; height:7px; border-radius:50%;
+  background:#E8001B; margin-left:5px; vertical-align:middle;
+  animation:blink-dot 1.8s ease-in-out infinite;
+}
+@keyframes blink-dot {
+  0%,100%{opacity:1} 50%{opacity:.2}
+}
+/* ETC 비활성 오버레이 */
+.etc-overlay-wrap { position:relative; }
+#etc-disabled-overlay {
+  position:absolute; inset:0; z-index:99;
+  background:rgba(248,250,252,.93);
+  backdrop-filter:blur(2px);
+  display:flex; align-items:center; justify-content:center;
+  border-radius:12px; pointer-events:all;
+}
+
 </style>
 </head>
 <body>
@@ -311,7 +337,7 @@ table.t tr.detail-row.open{display:table-row}
 <button class="nb" onclick="go('to',this)">T/O 현황</button>
 <button class="nb" onclick="go('mb',this)">인원 명부</button>
 <button class="nb" onclick="go('kpi-otc',this)">KPI현황_OTC</button>
-<button class="nb" onclick="go('kpi-etc',this)">KPI현황_ETC</button>
+<button id="btn-kpi-etc" class="nb" onclick="goEtcOrBlock(this)" style="display:none">KPI현황_ETC</button>
 <button class="nb" onclick="go('kpi-std',this)">KPI 산정기준</button>
 </div>
 <div class="body">
@@ -1103,6 +1129,8 @@ const KD4=[{"n":"서장원","b":"OTC","d":"약국영업1부","t":"중부 약국1
 const KC4={"yak_ts":{"n":112,"p10":4963.0,"n10":11,"p20":4757.0,"n20":22,"p30":4681.0,"n30":33,"bot10":4094.0,"nb10":11},"yak_ma":{"n":112,"p10":1240.8,"n10":11,"p20":1195.8,"n20":22,"p30":1172.2,"n30":33,"bot10":1045.8,"nb10":11},"dom_ts":{"n":8,"p10":8369.0,"n10":1,"p20":7889.0,"n20":2,"p30":7700.0,"n30":3,"bot10":7279.0,"nb10":1},"dom_ma":{"n":8,"p10":2092.2,"n10":1,"p20":1972.2,"n20":2,"p30":1925.0,"n30":3,"bot10":1819.8,"nb10":1},"tl_ts":{"n":18,"p10":3724.0,"n10":1,"p20":3698.0,"n20":3,"p30":3640.0,"n30":5,"bot10":3251.0,"nb10":1},"tl_ma":{"n":18,"p10":931.0,"n10":1,"p20":924.5,"n20":3,"p30":910.0,"n30":5,"bot10":812.8,"nb10":1}};
 const KDEPTS4=['약국영업1부','약국영업2부','약국영업3부','도매부'];
 const KMS4=['1월','2월','3월','4월'];
+// ─── ETC KPI 활성화 플래그 ─── true로 변경 시 즉시 재활성화
+const ETC_KPI_ENABLED = false;
 
 // ═══ 조회 기간 인프라 ═══
 const KD4_ORIG=JSON.parse(JSON.stringify(KD4));
@@ -1670,6 +1698,48 @@ function kpiInit4(){
   }
   kInitTabs4(); kExec4(); kMain4(); kFL4();
 }
+
+// ── ETC KPI 활성화 제어 ──────────────────────────
+(function(){
+  // 버튼 초기 상태 설정
+  function applyEtcState(){
+    var btn = document.getElementById('btn-kpi-etc');
+    var overlay = document.getElementById('etc-disabled-overlay');
+    if(!btn) return;
+    if(ETC_KPI_ENABLED){
+      btn.classList.remove('nb-etc-off');
+      btn.title = '';
+      if(overlay) overlay.style.display='none';
+    } else {
+      btn.classList.add('nb-etc-off');
+      btn.title = 'ETC KPI 데이터 준비 중 — 데이터 확정 후 활성화 예정';
+      if(overlay) overlay.style.display='flex';
+    }
+  }
+  window.goEtcOrBlock = function(btn){
+    if(!ETC_KPI_ENABLED){
+      // 토스트 알림 표시
+      var t=document.getElementById('etc-toast');
+      if(!t){
+        t=document.createElement('div');
+        t.id='etc-toast';
+        t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);'+
+          'background:#1A3A5C;color:#fff;padding:11px 22px;border-radius:8px;'+
+          'font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.25);'+
+          'pointer-events:none;transition:opacity .3s';
+        t.textContent = '🔒 ETC KPI 데이터 준비 중 — 확정 후 자동 활성화됩니다';
+        document.body.appendChild(t);
+      }
+      t.style.opacity='1';
+      clearTimeout(window._etcToast);
+      window._etcToast=setTimeout(function(){t.style.opacity='0';},2800);
+      return;
+    }
+    go('kpi-etc', btn);
+  };
+  document.addEventListener('DOMContentLoaded', applyEtcState);
+})();
+
 // KPI 탭 전환 시 메인 렌더링 연동
 (function(){
   var _og4=window.go;
@@ -1853,8 +1923,22 @@ function stdSwitch(t){
 </div>
 
 
-<div id="pane-kpi-etc" class="pane">
-<div style="max-width:1500px;margin:0 auto">
+<div id="pane-kpi-etc" class="pane" style="display:none">
+<div style="max-width:1500px;margin:0 auto;position:relative" class="etc-overlay-wrap">
+<!-- ▼ ETC 비활성 오버레이: ETC_KPI_ENABLED=true 시 자동 제거 -->
+<div id="etc-disabled-overlay">
+  <div style="text-align:center;padding:40px;max-width:420px">
+    <div style="font-size:38px;margin-bottom:16px">🔒</div>
+    <div style="font-size:17px;font-weight:800;color:#1A3A5C;margin-bottom:10px">ETC KPI 데이터 준비 중</div>
+    <div style="font-size:13px;color:#64748B;line-height:1.8;margin-bottom:18px">ETC 부문 KPI 데이터가 아직 업로드되지 않았습니다.<br>데이터 확정 후 즉시 활성화 예정입니다.</div>
+    <div style="font-size:11px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:8px;padding:10px 16px;color:#64748B;line-height:1.9;text-align:left">
+      <b style="color:#2C5F8A">재활성화 방법</b><br>
+      JS 상단 <code style="background:#E0EAF5;padding:1px 5px;border-radius:3px">ETC_KPI_ENABLED = false</code>를<br>
+      <code style="background:#E0EAF5;padding:1px 5px;border-radius:3px">ETC_KPI_ENABLED = true</code>로 변경
+    </div>
+  </div>
+</div>
+
 
   <!-- ETC 임원 인사이트 배너 (미래 데이터용) -->
   <div style="background:#1a2538;border-radius:12px;padding:20px 26px;margin-bottom:20px;position:relative;overflow:hidden">
